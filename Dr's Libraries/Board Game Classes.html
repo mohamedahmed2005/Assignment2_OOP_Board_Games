@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Board Game Classes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Board Game Classes</h1>
+    <p>This C++ code defines a set of classes for implementing a generic board game. The code uses templates to allow for different board game types and player symbols.</p>
+    <h2>Board Class</h2>
+    <p>The <code>Board</code> class is an abstract base class that defines the interface for a board game board. It has the following members:</p>
+    <ul>
+        <li><code>rows</code>: the number of rows in the board</li>
+        <li><code>columns</code>: the number of columns in the board</li>
+        <li><code>board</code>: a 2D array to store the board state</li>
+        <li><code>n_moves</code>: the number of moves made on the board</li>
+    </ul>
+    <p>The <code>Board</code> class defines the following pure virtual methods:</p>
+    <ul>
+        <li><code>update_board(int x, int y, T symbol)</code>: updates the board with the given symbol at the specified coordinates, returning <code>true</code> if the move is valid and <code>false</code> otherwise</li>
+        <li><code>display_board()</code>: displays the current state of the board</li>
+        <li><code>is_win()</code>: returns <code>true</code> if there is a winner on the board</li>
+        <li><code>is_draw()</code>: returns <code>true</code> if the game is a draw (all moves are made and no winner)</li>
+        <li><code>game_is_over()</code>: returns <code>true</code> if the game is over (either a winner or a draw)</li>
+    </ul>
+    
+    <h2>Player Class</h2>
+    <p>The <code>Player</code> class is an abstract base class that defines the interface for a player in the board game. It has the following members:</p>
+    <ul>
+        <li><code>name</code>: the name of the player</li>
+        <li><code>symbol</code>: the symbol used by the player on the board</li>
+        <li><code>boardPtr</code>: a pointer to the board object</li>
+    </ul>
+    <p>The <code>Player</code> class defines the following methods:</p>
+    <ul>
+        <li><code>getmove(int&amp; x, int&amp; y)</code>: a pure virtual method that allows the player to specify their next move</li>
+        <li><code>getsymbol()</code>: returns the player's symbol</li>
+        <li><code>getname()</code>: returns the player's name</li>
+        <li><code>setBoard(Board&lt;T&gt;* b)</code>: sets the board pointer for the player</li>
+    </ul>
+    
+    <h2>RandomPlayer Class</h2>
+    <p>The <code>RandomPlayer</code> class is a derived class of the <code>Player</code> class that represents a random computer player. It has the following additional member:</p>
+    <ul>
+        <li><code>dimension</code>: the size of the board</li>
+    </ul>
+    <p>The <code>RandomPlayer</code> class overrides the <code>getmove(int&amp; x, int&amp; y)</code> method to generate a random move on the board.</p>
+    
+    <h2>GameManager Class</h2>
+    <p>The <code>GameManager</code> class is responsible for managing the game flow. It has the following members:</p>
+    <ul>
+        <li><code>boardPtr</code>: a pointer to the board object</li>
+        <li><code>players</code>: an array of two player objects</li>
+    </ul>
+    <p>The <code>GameManager</code> class defines the following method:</p>
+    <ul>
+        <li><code>run()</code>: the main game loop that alternates between the two players, updates the board, and checks for a winner or a draw.</li>
+    </ul>
+</body>
+</html>
