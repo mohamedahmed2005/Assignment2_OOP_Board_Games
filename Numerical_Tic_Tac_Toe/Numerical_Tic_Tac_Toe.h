@@ -3,15 +3,17 @@
 #include <iomanip>
 #include <vector>
 #include <cstdlib>
-#include <ctime>
 #include <algorithm>
 #include<limits>
+#include<map>
 using namespace std;
 vector<int> Xdimension ;
 vector<int> Ydimension ;
 
 vector<int> odd_numbers = {1, 3, 5, 7, 9};
 vector<int> even_numbers={2,4,6,8};
+
+map<int, pair<int, int>> moves;
 template<typename T>
 class Numerical_Tic_Tac_Toe:public BoardGame_Classes<T> {
 public:
@@ -52,8 +54,9 @@ bool Numerical_Tic_Tac_Toe<T>::update_board(int x, int y, T symbol) {
         return false;
     }
     this->board[x][y] = symbol;
-    Xdimension.push_back(x);
-    Ydimension.push_back(y);
+
+    // Assuming moves is a map where the key is the move number and the value is the position
+    moves[this->n_moves] = make_pair(x, y);
     ++this->n_moves;
     return true;
 }
@@ -131,16 +134,49 @@ void Numerical_Tic_Tac_Toe_player<T>::getmove(int &x, int &y) {
         cout << "\nPlease enter your move x and y (0 to 2) separated by spaces: ";
         cin >> x >> y;
 
-        // Check if input is valid
-        if (cin.fail() || x < 0 || x > 2 || y < 0 || y > 2) {
-            cout << "Invalid input. Please enter numbers between 0 and 2." << endl;
-            cin.clear(); // Clear the error flag
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-        } else {
-            // If the position is valid (within range), break the loop
-            break;
-        }
+        // Check if the input is valid and the position is unoccupied
+        if (cin.fail() || x < 0 || x > 2 || y < 0 || y > 2 ||
+            any_of(moves.begin(), moves.end(), [x, y](const pair<int, pair<int, int>>& move) {
+                return move.second.first == x && move.second.second == y;
+            })) {
+            cout << "Invalid input. Please enter numbers between 0 and 2 for an unoccupied position." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else {
+                break;
+            }
     }
+
+}
+//------------------------------------------------------------------------------------------------------------
+template<typename T>
+class Random_Numerical_Tic_Tac_Toe: public RandomPlayer<T> {
+public:
+    Random_Numerical_Tic_Tac_Toe(const vector<T>& nums);
+    void getmove(int &x, int &y) override;
+private:
+    vector<T> available_numbers; // Store available numbers
+};
+template<typename T>
+Random_Numerical_Tic_Tac_Toe<T>::Random_Numerical_Tic_Tac_Toe(const vector<T>& nums)
+    : RandomPlayer<T>(0), available_numbers(nums) {}
+template<typename T>
+void Random_Numerical_Tic_Tac_Toe<T>::getmove(int &x, int &y) {
+    cout << this->name << "'s turn:" << endl;
+
+    // Choose a random number from available numbers
+    int rand_idx = rand() % available_numbers.size();
+    this->symbol = available_numbers[rand_idx];
+    available_numbers.erase(available_numbers.begin() + rand_idx); // Remove used number
+
+    // Generate a random valid move
+    do {
+        x = rand() % 3;
+        y = rand() % 3;
+    } while (any_of(moves.begin(), moves.end(), [x, y](const pair<int, pair<int, int>>& move) {
+        return move.second.first == x && move.second.second == y;
+    }));
+    // Assuming `getCell` returns the cell value
 }
 
 
@@ -151,7 +187,7 @@ int Numerical_menu() {
     BoardGame_Classes<int>* B = new Numerical_Tic_Tac_Toe<int>();
     string playerXName, player2Name;
 
-    cout << "Welcome to FCAI X-O Game. :)\n";
+    cout << "Welcome to FCAI Numerical Tic Tac Toe Game. :)\n";
 
     // Set up player 1
     cout << "Enter Player X name: ";
@@ -166,6 +202,9 @@ int Numerical_menu() {
         case 1:
             players[0] = new Numerical_Tic_Tac_Toe_player<int>(playerXName, odd_numbers);
             cout << "Player X (" << playerXName << ") is a Human.\n";
+            break;
+        case 2:
+            players[0] = new Random_Numerical_Tic_Tac_Toe<int>(odd_numbers); // Pass the vector
             break;
         default:
             cout << "Invalid choice for Player 1. Exiting the game.\n";
@@ -187,6 +226,9 @@ int Numerical_menu() {
             players[1] = new Numerical_Tic_Tac_Toe_player<int>(player2Name, even_numbers);
             cout << "Player 2 (" << player2Name << ") is a Human.\n";
             break;
+        case 2:
+            players[1] = new Random_Numerical_Tic_Tac_Toe<int>(even_numbers);
+            break;
         default:
             cout << "Invalid choice for Player 2. Exiting the game.\n";
             return 1;
@@ -202,5 +244,6 @@ int Numerical_menu() {
     for (int i = 0; i < 2; ++i) {
         delete players[i];
     }
+    moves.clear();
     return 0;
 }
