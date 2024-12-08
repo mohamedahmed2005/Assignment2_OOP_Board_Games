@@ -60,22 +60,27 @@ bool Numerical_Tic_Tac_Toe<T>::update_board(int x, int y, T symbol) {
     ++this->n_moves;
     return true;
 }
-template<typename T>
+template <typename T>
 bool Numerical_Tic_Tac_Toe<T>::is_win() {
+    // Helper lambda to check a triplet sum
+    auto is_valid_sum = [&](T a, T b, T c) {
+        return (a != 0 && b != 0 && c != 0 && (a + b + c == 15));
+    };
+
+    // Check rows and columns
     for (int i = 0; i < this->rows; i++) {
-        if (this->board[i][0] + this->board[i][1] + this->board[i][2] == 15) {
+        if (is_valid_sum(this->board[i][0], this->board[i][1], this->board[i][2]) || // Row check
+            is_valid_sum(this->board[0][i], this->board[1][i], this->board[2][i])) { // Column check
             return true;
-        }
-        if (this->board[0][i] + this->board[1][i] + this->board[2][i] == 15) {
-            return true;
-        }
+            }
     }
-    if (this->board[0][0] + this->board[1][1] + this->board[2][2] == 15) {
+
+    // Check diagonals
+    if (is_valid_sum(this->board[0][0], this->board[1][1], this->board[2][2]) || // Top-left to bottom-right
+        is_valid_sum(this->board[0][2], this->board[1][1], this->board[2][0])) { // Top-right to bottom-left
         return true;
-    }
-    if (this->board[0][2] + this->board[1][1] + this->board[2][0] == 15) {
-        return true;
-    }
+        }
+
     return false;
 }
 template<typename T>
