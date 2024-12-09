@@ -199,7 +199,10 @@ void Ultimate_Tic_Tac_Toe_player<T>::getmove(int &x, int &y) {
 template<typename T>
 class Random_Ultimate_Tic_Tac_Toe : public RandomPlayer<T> {
     public:
-    Random_Ultimate_Tic_Tac_Toe(T symbol) : RandomPlayer<T>(symbol) {}
+    Random_Ultimate_Tic_Tac_Toe(string name,T symbol) : RandomPlayer<T>(symbol) {
+        this->name = name+"_Random Computer";
+        srand(static_cast<unsigned int>(time(NULL)));
+    }
     void getmove(int& x, int& y) override;
 };
 template<typename T>
@@ -252,7 +255,7 @@ int Ultimate_Tic_Tac_Toe_menu() {
         cout << "Player X (" << player1Name << ") is a Human.\n";
     }
     else if (choice == 2) {
-        players[0] = new Random_Ultimate_Tic_Tac_Toe<char>(x1);
+        players[0] = new Random_Ultimate_Tic_Tac_Toe<char>(player1Name,x1);
     }
     players[0]->setBoard(B);
 
@@ -270,7 +273,7 @@ int Ultimate_Tic_Tac_Toe_menu() {
         cout << "Player Y (" << player2Name << ") is a Human.\n";
     }
     else if (choice == 2) {
-        players[1] = new Random_Ultimate_Tic_Tac_Toe<char>(x2);
+        players[1] = new Random_Ultimate_Tic_Tac_Toe<char>(player2Name,x2);
     }
     players[0]->setBoard(B);
     GameManager<char> four_in_a_row(B, players);
