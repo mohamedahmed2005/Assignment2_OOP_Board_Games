@@ -146,7 +146,6 @@ template<typename T>
 void Random_Four_in_a_row<T>::getmove(int &x, int &y) {
     int last_x = -1;
     int last_y = -1;
-    srand(time(NULL));
     cout << this->name << "'s turn" << endl;
     do {
         x = rand() % 6;
