@@ -26,7 +26,10 @@ public:
 template <typename T>
 class Random_Four_in_a_row:public RandomPlayer<T> {
 public:
-    Random_Four_in_a_row(T symbol) : RandomPlayer<T>(symbol) {}
+    Random_Four_in_a_row(string name,T symbol) : RandomPlayer<T>(symbol) {
+        this->name = name+"_Random Computer";
+        srand(static_cast<unsigned int>(time(NULL)));
+    }
     void getmove(int& x, int& y) override;
 };
 //----------------------------------------------------------------
@@ -199,7 +202,7 @@ int Four_in_a_row_menu() {
         cout << "Player X (" << player1Name << ") is a Human.\n";
     }
     else if (choice == "2") {
-        players[0] = new Random_Four_in_a_row<char>(x1);
+        players[0] = new Random_Four_in_a_row<char>(player1Name,x1);
     }
     players[0]->setBoard(B);
 
@@ -218,7 +221,7 @@ int Four_in_a_row_menu() {
         cout << "Player Y (" << player2Name << ") is a Human.\n";
     }
     else if (choice == "2") {
-        players[1] = new Random_Four_in_a_row<char>(x2);
+        players[1] = new Random_Four_in_a_row<char>(player2Name,x2);
     }
     players[0]->setBoard(B);
     GameManager<char> four_in_a_row(B, players);
