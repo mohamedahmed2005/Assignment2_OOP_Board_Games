@@ -2,10 +2,11 @@
 // Created by VICTUS on 12/7/2024.
 //
 
+// Note That Is Win Made by AI to test functions of code
+
 #ifndef ULTIMATE_TIC_TAC_TOE_H
 #define ULTIMATE_TIC_TAC_TOE_H
 #include"BoardGame_Classes.h"
-
 using namespace std;
 template<typename T>
 class Ultimate_Tic_Tac_Toe:public BoardGame_Classes<T> {
@@ -102,7 +103,8 @@ bool Ultimate_Tic_Tac_Toe<T>::update_board(int x, int y, T symbol) {
     return true;
 }
 
-template <typename T>
+
+template<typename T>
 bool Ultimate_Tic_Tac_Toe<T>::is_win() {
     const int blockSize = 3;
     T mainBoard[blockSize][blockSize];
@@ -112,55 +114,32 @@ bool Ultimate_Tic_Tac_Toe<T>::is_win() {
         for (int j = 0; j < blockSize; ++j) {
             int startRow = i * blockSize;
             int startCol = j * blockSize;
-            T winner = '.'; // No winner initially
+            T winner = '.';
 
-            // Check the smaller board for a row match
+            // Check the smaller board
             for (int r = startRow; r < startRow + blockSize; ++r) {
-                if (this->board[r][startCol] != '.' && this->board[r][startCol] != '$' &&
-                    this->board[r][startCol] == this->board[r][startCol + 1] &&
-                    this->board[r][startCol + 1] == this->board[r][startCol + 2]) {
+                if (this->board[r][startCol] != '.' && this->board[r][startCol] == this->board[r][startCol + 1] && this->board[r][startCol + 1] == this->board[r][startCol + 2]) {
                     winner = this->board[r][startCol];
                     break;
                 }
             }
 
-            // Check the smaller board for a column match
             for (int c = startCol; c < startCol + blockSize; ++c) {
-                if (this->board[startRow][c] != '.' && this->board[startRow][c] != '$' &&
-                    this->board[startRow][c] == this->board[startRow + 1][c] &&
-                    this->board[startRow + 1][c] == this->board[startRow + 2][c]) {
+                if (this->board[startRow][c] != '.' && this->board[startRow][c] == this->board[startRow + 1][c] && this->board[startRow + 1][c] == this->board[startRow + 2][c]) {
                     winner = this->board[startRow][c];
                     break;
                 }
             }
 
-            // Check the smaller board for a diagonal match
-            if (this->board[startRow][startCol] != '.' && this->board[startRow][startCol] != '$' &&
-                this->board[startRow][startCol] == this->board[startRow + 1][startCol + 1] &&
-                this->board[startRow + 1][startCol + 1] == this->board[startRow + 2][startCol + 2]) {
+            if (this->board[startRow][startCol] != '.' && this->board[startRow][startCol] == this->board[startRow + 1][startCol + 1] && this->board[startRow + 1][startCol + 1] == this->board[startRow + 2][startCol + 2]) {
                 winner = this->board[startRow][startCol];
             }
 
-            // Check the smaller board for an anti-diagonal match
-            if (this->board[startRow][startCol + 2] != '.' && this->board[startRow][startCol + 2] != '$' &&
-                this->board[startRow][startCol + 2] == this->board[startRow + 1][startCol + 1] &&
-                this->board[startRow + 1][startCol + 1] == this->board[startRow + 2][startCol]) {
+            if (this->board[startRow][startCol + 2] != '.' && this->board[startRow][startCol + 2] == this->board[startRow + 1][startCol + 1] && this->board[startRow + 1][startCol + 1] == this->board[startRow + 2][startCol]) {
                 winner = this->board[startRow][startCol + 2];
             }
 
-            // Update the main board with the winner or '.' if no winner
             mainBoard[i][j] = winner;
-
-            // Lock the submatrix and mark the cells within it if there's a winner
-            if (winner != '.') {
-                for (int r = startRow; r < startRow + blockSize; ++r) {
-                    for (int c = startCol; c < startCol + blockSize; ++c) {
-                        if (this->board[r][c] == '.') {
-                            this->board[r][c] = '$'; // Mark empty cells as '$'
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -184,10 +163,9 @@ bool Ultimate_Tic_Tac_Toe<T>::is_win() {
     if (mainBoard[0][2] != '.' && mainBoard[0][2] == mainBoard[1][1] && mainBoard[1][1] == mainBoard[2][0]) {
         return true;
     }
+
     return false;
 }
-
-
 template<typename T>
 bool Ultimate_Tic_Tac_Toe<T>::is_draw() {
     return (this->n_moves == 81 && !is_win());
@@ -254,20 +232,20 @@ int Ultimate_Tic_Tac_Toe_menu() {
         cout << "1. Human\n";
         cout << "2. Random Computer\n";
         cin >> choice;
-    }while (cin.fail()||(choice<=0||choice>2));
+    }while (cin.fail()||(choice<0||choice>2));
     do {
         cout<<"Enter symbol that you want to play"<<endl;
-        cout<<"1. X"<<endl;
-        cout<<"2. O"<<endl;
+        cout<<"1. x"<<endl;
+        cout<<"2. o"<<endl;
         cin>>choose;
     } while (choose!="1"&&choose!="2");
     if (choose=="1") {
-        x1 = 'X';
-        x2 = 'O';
+        x1 = 'x';
+        x2 = 'o';
     }
     else if (choose=="2") {
-        x1 = 'O';
-        x2 = 'X';
+        x1 = 'o';
+        x2 = 'x';
     }
     if (choice == 1) {
         players[0] = new Ultimate_Tic_Tac_Toe_player<char>(player1Name,x1);
@@ -286,7 +264,7 @@ int Ultimate_Tic_Tac_Toe_menu() {
         cout << "1. Human\n";
         cout << "2. Random Computer\n";
         cin >> choice;
-    }while (cin.fail()||(choice<=0||choice>2));
+    }while (cin.fail()||(choice<0||choice>3));
     if (choice == 1) {
         players[1] = new Ultimate_Tic_Tac_Toe_player<char>(player2Name,x2);
         cout << "Player Y (" << player2Name << ") is a Human.\n";
