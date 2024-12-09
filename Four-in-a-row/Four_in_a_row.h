@@ -183,17 +183,17 @@ int Four_in_a_row_menu() {
     }while (cin.fail()||(choice!="1"&&choice!="2"&&choice!="3"));
     do {
         cout<<"Enter symbol that you want to play"<<endl;
-        cout<<"1. x"<<endl;
-        cout<<"2. o"<<endl;
+        cout<<"1. X"<<endl;
+        cout<<"2. O"<<endl;
         cin>>choose;
     } while (choose!="1"&&choose!="2");
     if (choose=="1") {
-        x1 = 'x';
-        x2 = 'o';
+        x1 = 'X';
+        x2 = 'O';
     }
     else if (choose=="2") {
-        x1 = 'o';
-        x2 = 'x';
+        x1 = 'O';
+        x2 = 'X';
     }
     if (choice == "1") {
         players[0] = new Four_in_a_row_player<char>(player1Name,x1);
