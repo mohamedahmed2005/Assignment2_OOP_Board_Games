@@ -158,16 +158,19 @@ void Numerical_Tic_Tac_Toe_player<T>::getmove(int &x, int &y) {
 template<typename T>
 class Random_Numerical_Tic_Tac_Toe: public RandomPlayer<T> {
 public:
-    Random_Numerical_Tic_Tac_Toe(const vector<T>& nums);
+    Random_Numerical_Tic_Tac_Toe(string name,const vector<T>& nums);
     void getmove(int &x, int &y) override;
 private:
     vector<T> available_numbers;
 };
 template<typename T>
-Random_Numerical_Tic_Tac_Toe<T>::Random_Numerical_Tic_Tac_Toe(const vector<T>& nums)
-    : RandomPlayer<T>(0), available_numbers(nums) {}
+Random_Numerical_Tic_Tac_Toe<T>::Random_Numerical_Tic_Tac_Toe(string name,const vector<T>& nums)
+    : RandomPlayer<T>(0), available_numbers(nums) {
+    this->name = name+"_Random Computer";
+}
 template<typename T>
 void Random_Numerical_Tic_Tac_Toe<T>::getmove(int &x, int &y) {
+    srand(time(NULL));
     cout << this->name << "'s turn:" << endl;
 
     // Choose a random number from available numbers
@@ -377,7 +380,7 @@ int Numerical_menu() {
         cout << "Player X (" << playerXName << ") is a Human.\n";
     }
     else if (choice == "2") {
-        players[0] = new Random_Numerical_Tic_Tac_Toe<int>(odd_numbers); // Pass the vector
+        players[0] = new Random_Numerical_Tic_Tac_Toe<int>(playerXName,odd_numbers); // Pass the vector
     }
     else if (choice == "3") {
         players[0] = new num_Tic_Tac_AI_Player<int>(1);
@@ -400,7 +403,7 @@ int Numerical_menu() {
         cout << "Player 2 (" << player2Name << ") is a Human.\n";
     }
     if (choice=="2") {
-        players[1] = new Random_Numerical_Tic_Tac_Toe<int>(even_numbers); // Pass the vector
+        players[1] = new Random_Numerical_Tic_Tac_Toe<int>(player2Name,even_numbers); // Pass the vector
     }
     if (choice=="3") {
         players[1] = new num_Tic_Tac_AI_Player<int>(2);
