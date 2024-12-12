@@ -9,9 +9,9 @@
 #include"BoardGame_Classes.h"
 using namespace std;
 template<typename T>
-class Ultimate_Tic_Tac_Toe:public BoardGame_Classes<T> {
+class Ultimate_Tic_Tac_Toe_Board:public BoardGame_Classes<T> {
     public:
-    Ultimate_Tic_Tac_Toe();
+    Ultimate_Tic_Tac_Toe_Board();
     void display_board() override;
     bool update_board(int x, int y, T symbol) override;
     bool is_win() override;
@@ -19,7 +19,7 @@ class Ultimate_Tic_Tac_Toe:public BoardGame_Classes<T> {
     bool game_is_over() override;
 };
 template<typename T>
-Ultimate_Tic_Tac_Toe<T>::Ultimate_Tic_Tac_Toe() {
+Ultimate_Tic_Tac_Toe_Board<T>::Ultimate_Tic_Tac_Toe_Board() {
     this->rows = 9;
     this->columns = 9;
     this->board = new T*[this->rows];
@@ -29,7 +29,7 @@ Ultimate_Tic_Tac_Toe<T>::Ultimate_Tic_Tac_Toe() {
     }
 }
 template <typename T>
-void Ultimate_Tic_Tac_Toe<T>::display_board() {
+void Ultimate_Tic_Tac_Toe_Board<T>::display_board() {
     const int blockSize = 3; // Size of a block
 
     // Print the header row showing the number of columns above each column
@@ -91,7 +91,7 @@ void Ultimate_Tic_Tac_Toe<T>::display_board() {
 
 
 template<typename T>
-bool Ultimate_Tic_Tac_Toe<T>::update_board(int x, int y, T symbol) {
+bool Ultimate_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
     if (x < 0 || x >= this->rows || y < 0 || y >= this->columns) {
         return false;
     }
@@ -105,7 +105,7 @@ bool Ultimate_Tic_Tac_Toe<T>::update_board(int x, int y, T symbol) {
 
 
 template<typename T>
-bool Ultimate_Tic_Tac_Toe<T>::is_win() {
+bool Ultimate_Tic_Tac_Toe_Board<T>::is_win() {
     const int blockSize = 3;
     T mainBoard[blockSize][blockSize];
 
@@ -167,12 +167,12 @@ bool Ultimate_Tic_Tac_Toe<T>::is_win() {
     return false;
 }
 template<typename T>
-bool Ultimate_Tic_Tac_Toe<T>::is_draw() {
+bool Ultimate_Tic_Tac_Toe_Board<T>::is_draw() {
     return (this->n_moves == 81 && !is_win());
 }
 
 template<typename T>
-bool Ultimate_Tic_Tac_Toe<T>::game_is_over() {
+bool Ultimate_Tic_Tac_Toe_Board<T>::game_is_over() {
     return is_win()||is_draw();
 }
 //---------------------------------------------------------------
@@ -220,7 +220,7 @@ void Random_Ultimate_Tic_Tac_Toe<T>::getmove(int &x, int &y) {
 
 int Ultimate_Tic_Tac_Toe_menu() {
     int choice;
-    BoardGame_Classes<char>* B = new Ultimate_Tic_Tac_Toe<char>();
+    BoardGame_Classes<char>* B = new Ultimate_Tic_Tac_Toe_Board<char>();
     Player<char>* players[2];
     string player1Name, player2Name;
     char x1 , x2;
