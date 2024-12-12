@@ -276,8 +276,8 @@ int Ultimate_Tic_Tac_Toe_menu() {
         players[1] = new Random_Ultimate_Tic_Tac_Toe<char>(player2Name,x2);
     }
     players[0]->setBoard(B);
-    GameManager<char> four_in_a_row(B, players);
-    four_in_a_row.run();
+    GameManager<char> Ultimate_Tic_Tac_Toe(B, players);
+    Ultimate_Tic_Tac_Toe.run();
     delete B;
     for (int i = 0; i < 2; ++i) {
         delete players[i];
