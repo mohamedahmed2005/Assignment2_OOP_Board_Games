@@ -240,9 +240,9 @@ int Numerical_menu() {
     players[1]->setBoard(B);
 
     // Create the game manager and run the game
-    GameManager<int> x_o_game(B, players);
+    GameManager<int> Numerical_Tic_Tac_Toe(B, players);
     instuctions();
-    x_o_game.run();
+    Numerical_Tic_Tac_Toe.run();
 
     // Clean up
     delete B;
