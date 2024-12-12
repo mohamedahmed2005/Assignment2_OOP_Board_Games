@@ -180,9 +180,8 @@ int Four_in_a_row_menu() {
         cout << "Choose Player X type:\n";
         cout << "1. Human\n";
         cout << "2. Random Computer\n";
-        cout << "3. Smart Computer (AI)\n";
         cin >> choice;
-    }while (cin.fail()||(choice!="1"&&choice!="2"&&choice!="3"));
+    }while (cin.fail()||(choice!="1"&&choice!="2"));
     do {
         cout<<"Enter symbol that you want to play"<<endl;
         cout<<"1. X"<<endl;
@@ -213,7 +212,6 @@ int Four_in_a_row_menu() {
         cout << "Choose Player Y type:\n";
         cout << "1. Human\n";
         cout << "2. Random Computer\n";
-        cout << "3. Smart Computer (AI)\n";
         cin >> choice;
     }while (cin.fail()||(choice!="1"&&choice!="2"&&choice!="3"));
     if (choice == "1") {
