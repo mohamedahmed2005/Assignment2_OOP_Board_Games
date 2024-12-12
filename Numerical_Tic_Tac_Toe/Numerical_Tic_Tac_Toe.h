@@ -7,8 +7,6 @@
 #include<limits>
 #include<map>
 using namespace std;
-vector<int> Xdimension ;
-vector<int> Ydimension ;
 
 vector<int> odd_numbers = {1, 3, 5, 7, 9};
 vector<int> even_numbers={2,4,6,8};
@@ -195,167 +193,6 @@ void instuctions() {
     cout<<"Winning: A player wins by placing three numbers in a row, column, or diagonal that add up to 15."<<endl;
 }
 //------------------------------------------------------------------------------------------------------------
-
-#include <array>
-#include <set>
-#include <tuple>
-
-
-// --------------------- AI Player Class ---------------------
-template <typename T>
-class num_Tic_Tac_AI_Player : public Player<T> {
-public:
-    num_Tic_Tac_AI_Player(int key);
-    void getmove(int& x, int& y) override;
-
-private:
-    int calculateMinMax(bool isMaximizing, int depth, int alpha, int beta, int num);
-    std::tuple<int, int, T> getBestMove();
-};
-
-// Constructor
-template <typename T>
-num_Tic_Tac_AI_Player<T>::num_Tic_Tac_AI_Player(int key) : Player<T>("AI Player", key) {
-    // The key determines whether the AI uses odd or even numbers
-    if (key == 1) {
-        this->symbol = 1; // Placeholder for odd numbers
-    } else {
-        this->symbol = 2; // Placeholder for even numbers
-    }
-}
-
-// Get the best move for the AI
-template <typename T>
-void num_Tic_Tac_AI_Player<T>::getmove(int& x, int& y) {
-    auto& available_numbers = (this->symbol == 1) ? odd_numbers : even_numbers; // Use global vectors
-    auto [bestX, bestY, bestNum] = getBestMove();
-
-    x = bestX;
-    y = bestY;
-    this->symbol = bestNum;
-    std::cout << "AI choosing move: (" << bestX << ", " << bestY << ") with number: " << bestNum << std::endl;
-    // Remove the chosen number from the global vector
-    auto it = std::find(available_numbers.begin(), available_numbers.end(), bestNum);
-    if (it != available_numbers.end()) {
-        available_numbers.erase(it);
-        std::cout << "Removed " << bestNum << " from available numbers." << std::endl;
-    }
-}
-
-template <typename T>
-int num_Tic_Tac_AI_Player<T>::calculateMinMax(bool isMaximizing, int depth, int alpha, int beta , int num) {
-    // Check terminal conditions
-    if (this->boardPtr->is_win()) {
-        return isMaximizing ? -10 + depth : 10 - depth;
-    }
-    if (this->boardPtr->is_draw()) {
-        return 0;
-    }
-
-    // Get available numbers based on the AI's symbol
-    auto& available_numbers = (this->symbol == 1) ? odd_numbers : even_numbers;
-    int bestValue = isMaximizing ? std::numeric_limits<int>::min() : std::numeric_limits<int>::max();
-
-    // Iterate through all board cells
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            for (auto num : available_numbers) {
-                if (this->boardPtr->update_board(i, j, num)) { // Try move
-                    // Temporarily remove the number from available_numbers
-                    auto it = std::find(available_numbers.begin(), available_numbers.end(), num);
-                    if (it != available_numbers.end()) available_numbers.erase(it);
-
-                    // Recursive call
-                    int score = calculateMinMax(!isMaximizing, depth + 1, alpha, beta, num);
-
-                    // Update bestValue
-                    if (isMaximizing) {
-                        bestValue = std::max(bestValue, score);
-                        alpha = std::max(alpha, bestValue);
-                    } else {
-                        bestValue = std::min(bestValue, score);
-                        beta = std::min(beta, bestValue);
-                    }
-
-                    // Undo the move
-                    available_numbers.push_back(num);
-                    this->boardPtr->update_board(i, j, 0);
-
-                    // Pruning
-                    if (beta <= alpha) {
-                        break;
-                    }
-                }
-            }
-            if (beta <= alpha) break; // Exit outer loop if pruning occurred
-        }
-        if (beta <= alpha) break; // Exit outer loop if pruning occurred
-    }
-
-    return bestValue;
-}
-
-
-
-// Find the best move
-template <typename T>
-std::tuple<int, int, T> num_Tic_Tac_AI_Player<T>::getBestMove() {
-    auto& available_numbers = (this->symbol == 1) ? odd_numbers : even_numbers;
-    int bestValue = std::numeric_limits<int>::min();
-    std::tuple<int, int, T> bestMove = {-1, -1, -2};
-    std::cout << "Finding best move...\n";
-
-    // Debug: Show available numbers
-    std::cout << "Available numbers: ";
-    for (auto num : available_numbers) std::cout << num << " ";
-    std::cout << std::endl;
-
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            for (auto num : available_numbers) {
-                if (this->boardPtr->update_board(i, j, num)) {
-                    // Remove number temporarily for evaluation
-                    auto it = std::find(available_numbers.begin(), available_numbers.end(), num);
-                    if (it != available_numbers.end()) available_numbers.erase(it);
-
-                    // Debug: Log the move being evaluated
-                    std::cout << "Evaluating move (" << i << ", " << j << ") with number " << num << std::endl;
-
-                    int moveValue = calculateMinMax(false, 0, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), num);
-
-                    // Debug: Log the score of the move
-                    std::cout << "Move (" << i << ", " << j << ") with number " << num << " has score: " << moveValue << std::endl;
-
-                    if (moveValue > bestValue) {
-                        bestValue = moveValue;
-                        bestMove = {i, j, num};
-                        std::cout << "New best move: (" << i << ", " << j << ") with score: " << moveValue << std::endl;
-                    }
-
-                    // Undo move
-                    available_numbers.push_back(num);
-                    this->boardPtr->update_board(i, j, 0);
-                }
-            }
-        }
-    }
-
-    if (std::get<0>(bestMove) == -1) {
-        std::cout << "Warning: No valid moves found!\n";
-    }
-
-    std::cout << "Best move found: (" << std::get<0>(bestMove) << ", " << std::get<1>(bestMove)
-              << ") with number: " << std::get<2>(bestMove) << std::endl;
-    return bestMove;
-}
-
-
-
-
-
-
-
-//------------------------------------------------------------------------------------------------------------
 int Numerical_menu() {
     string choice;
     Player<int>* players[2];
@@ -371,9 +208,8 @@ int Numerical_menu() {
     do {
         cout << "1. Human\n";
         cout << "2. Random Computer\n";
-        cout << "3. Smart Computer (AI)\n";
         cin >> choice;
-    }while (cin.fail()||(choice!="1"&&choice!="2"&&choice!="3"));
+    }while (cin.fail()||(choice!="1"&&choice!="2"));
 
     if (choice ==  "1") {
         players[0] = new Numerical_Tic_Tac_Toe_player<int>(playerXName, odd_numbers);
@@ -381,9 +217,6 @@ int Numerical_menu() {
     }
     else if (choice == "2") {
         players[0] = new Random_Numerical_Tic_Tac_Toe<int>(playerXName,odd_numbers); // Pass the vector
-    }
-    else if (choice == "3") {
-        players[0] = new num_Tic_Tac_AI_Player<int>(1);
     }
     players[0]->setBoard(B);
 
@@ -394,9 +227,8 @@ int Numerical_menu() {
     do {
         cout << "1. Human\n";
         cout << "2. Random Computer\n";
-        cout << "3. Smart Computer (AI)\n";
         cin >> choice;
-    }while (cin.fail()||(choice!="1"&&choice!="2"&&choice!="3"));
+    }while (cin.fail()||(choice!="1"&&choice!="2"));
 
     if (choice=="1") {
         players[1] = new Numerical_Tic_Tac_Toe_player<int>(player2Name, even_numbers);
@@ -404,9 +236,6 @@ int Numerical_menu() {
     }
     if (choice=="2") {
         players[1] = new Random_Numerical_Tic_Tac_Toe<int>(player2Name,even_numbers); // Pass the vector
-    }
-    if (choice=="3") {
-        players[1] = new num_Tic_Tac_AI_Player<int>(2);
     }
     players[1]->setBoard(B);
 
