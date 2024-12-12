@@ -13,9 +13,9 @@ vector<int> even_numbers={2,4,6,8};
 
 map<int, pair<int, int>> moves;
 template<typename T>
-class Numerical_Tic_Tac_Toe:public BoardGame_Classes<T> {
+class Numerical_Tic_Tac_Toe_Board:public BoardGame_Classes<T> {
 public:
-    Numerical_Tic_Tac_Toe();
+    Numerical_Tic_Tac_Toe_Board();
     bool update_board(int x, int y, T symbol) override;
     void display_board() override;
     bool is_win() override;
@@ -23,7 +23,7 @@ public:
     bool game_is_over() override;
 };
 template<typename T>
-Numerical_Tic_Tac_Toe<T>::Numerical_Tic_Tac_Toe() {
+Numerical_Tic_Tac_Toe_Board<T>::Numerical_Tic_Tac_Toe_Board() {
     this->rows = this->columns = 3;
     this->board = new T*[this->rows];
     for (int i = 0; i < this->rows; i++) {
@@ -35,7 +35,7 @@ Numerical_Tic_Tac_Toe<T>::Numerical_Tic_Tac_Toe() {
     this->n_moves = 0;
 }
 template<typename T>
-void Numerical_Tic_Tac_Toe<T>::display_board() {
+void Numerical_Tic_Tac_Toe_Board<T>::display_board() {
     for (int i = 0; i < this->rows; i++) {
         cout << "\n| ";
         for (int j = 0; j < this->columns; j++) {
@@ -47,7 +47,7 @@ void Numerical_Tic_Tac_Toe<T>::display_board() {
     cout << endl;
 }
 template<typename T>
-bool Numerical_Tic_Tac_Toe<T>::update_board(int x, int y, T symbol) {
+bool Numerical_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
     if (x < 0 || x >= this->rows || y < 0 || y >= this->columns || this->board[x][y] != 0) {
         return false;
     }
@@ -58,7 +58,7 @@ bool Numerical_Tic_Tac_Toe<T>::update_board(int x, int y, T symbol) {
     return true;
 }
 template <typename T>
-bool Numerical_Tic_Tac_Toe<T>::is_win() {
+bool Numerical_Tic_Tac_Toe_Board<T>::is_win() {
     // Helper lambda to check a triplet sum
     auto is_valid_sum = [&](T a, T b, T c) {
         return (a != 0 && b != 0 && c != 0 && (a + b + c == 15));
@@ -82,11 +82,11 @@ bool Numerical_Tic_Tac_Toe<T>::is_win() {
 }
 
 template<typename T>
-bool Numerical_Tic_Tac_Toe<T>::is_draw() {
+bool Numerical_Tic_Tac_Toe_Board<T>::is_draw() {
     return (this->n_moves == 9 && !is_win());
 }
 template<typename T>
-bool Numerical_Tic_Tac_Toe<T>::game_is_over() {
+bool Numerical_Tic_Tac_Toe_Board<T>::game_is_over() {
     return is_win() || is_draw();
 }
 
@@ -196,7 +196,7 @@ void instuctions() {
 int Numerical_menu() {
     string choice;
     Player<int>* players[2];
-    BoardGame_Classes<int>* B = new Numerical_Tic_Tac_Toe<int>();
+    BoardGame_Classes<int>* B = new Numerical_Tic_Tac_Toe_Board<int>();
     string playerXName, player2Name;
 
     cout << "Welcome to FCAI Numerical Tic Tac Toe Game. :)\n";
