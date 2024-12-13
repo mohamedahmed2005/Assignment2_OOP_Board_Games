@@ -144,6 +144,7 @@ Misere_X_O_Player<T>::Misere_X_O_Player(string name, T symbol) : Player<T>(name,
 template <typename T>
 void Misere_X_O_Player<T>::getmove(int& x, int& y) {
     if (lose || Moves == 9) {
+        Moves = 0;
         return;
     }
     while (true) {
@@ -206,6 +207,7 @@ void Misere_X_O_Gameplay() {
     Misere_X_O_Board <char>* B = new Misere_X_O_Board <char>();
     string playerXName, player2Name;
     // Set up player 1
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cout << "Enter Player 1 name: ";
     getline(cin, playerXName);
     cout << "Choose Player 1 type:\n";
