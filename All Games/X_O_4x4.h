@@ -318,6 +318,7 @@ void X_O_4x4_Gameplay() {
     X_O_4x4_Board <char>* B = new X_O_4x4_Board <char>();
     string playerXName, player2Name;
     // Set up player 1
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cout << "Enter Player 1 name: ";
     getline(cin, playerXName);
     cout << "Choose Player 1 type:\n";
