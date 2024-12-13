@@ -258,6 +258,7 @@ void X_O_5x5_Gameplay() {
     Player<char>* players[2];
     X_O_5x5_Board <char>* B = new X_O_5x5_Board <char>();
     string playerXName, player2Name;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     // Set up player 1
     cout << "Enter Player 1 name: ";
     getline(cin, playerXName);
