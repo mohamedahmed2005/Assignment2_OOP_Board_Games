@@ -2,14 +2,17 @@
 // Created by VICTUS on 12/7/2024.
 //
 
-// Note That Is Win Made by AI to test functions of code
-
 #ifndef ULTIMATE_TIC_TAC_TOE_H
 #define ULTIMATE_TIC_TAC_TOE_H
 #include"BoardGame_Classes.h"
 using namespace std;
+enum BlockState { OPEN, CLOSED }; // to check if subboard is closed or not, set Open = 0 and Closed = 1
+map<pair<int, int>, bool> availablePoints;
+
 template<typename T>
 class Ultimate_Tic_Tac_Toe_Board:public Board<T> {
+private:
+    BlockState blockStatus[3][3];
     public:
     Ultimate_Tic_Tac_Toe_Board();
     void display_board() override;
@@ -26,6 +29,12 @@ Ultimate_Tic_Tac_Toe_Board<T>::Ultimate_Tic_Tac_Toe_Board() {
     for (int i = 0; i < this->rows; ++i) {
         this->board[i] = new T[this->columns];
         fill(this->board[i], this->board[i] + this->columns, '.');
+    }
+    // Initialize all submatrices as OPEN
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            blockStatus[i][j] = OPEN;
+        }
     }
 }
 template <typename T>
@@ -95,11 +104,74 @@ bool Ultimate_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
     if (x < 0 || x >= this->rows || y < 0 || y >= this->columns) {
         return false;
     }
+
+    int blockRow = x / 3; // Determine which submatrix this cell belongs to
+    int blockCol = y / 3;
+
+    // Check if the submatrix is CLOSED
+    if (blockStatus[blockRow][blockCol] == CLOSED) {
+        cout << "This block is closed. Please choose a different block." << endl;
+        return false;
+    }
+
     if (this->board[x][y] != '.') {
         return false;
     }
+
+    // Update the cell
     this->board[x][y] = symbol;
     ++this->n_moves;
+
+    // Check if the submatrix should be closed
+    bool submatrixWon = false;
+
+    // Check rows, columns, and diagonals within the submatrix
+    int startRow = blockRow * 3;
+    int startCol = blockCol * 3;
+
+    for (int i = 0; i < 3; ++i) {
+        if (this->board[startRow + i][startCol] == symbol &&
+            this->board[startRow + i][startCol + 1] == symbol &&
+            this->board[startRow + i][startCol + 2] == symbol) {
+            submatrixWon = true;
+            break;
+        }
+        if (this->board[startRow][startCol + i] == symbol &&
+            this->board[startRow + 1][startCol + i] == symbol &&
+            this->board[startRow + 2][startCol + i] == symbol) {
+            submatrixWon = true;
+            break;
+        }
+    }
+
+    if (!submatrixWon) {
+        if (this->board[startRow][startCol] == symbol &&
+            this->board[startRow + 1][startCol + 1] == symbol &&
+            this->board[startRow + 2][startCol + 2] == symbol) {
+            submatrixWon = true;
+        }
+        if (this->board[startRow][startCol + 2] == symbol &&
+            this->board[startRow + 1][startCol + 1] == symbol &&
+            this->board[startRow + 2][startCol] == symbol) {
+            submatrixWon = true;
+        }
+    }
+
+    // If submatrix is won or full, mark it as CLOSED
+    bool submatrixFull = true;
+    for (int i = startRow; i < startRow + 3; ++i) {
+        for (int j = startCol; j < startCol + 3; ++j) {
+            if (this->board[i][j] == '.') {
+                submatrixFull = false;
+                break;
+            }
+        }
+    }
+
+    if (submatrixWon || submatrixFull) {
+        blockStatus[blockRow][blockCol] = CLOSED;
+    }
+
     return true;
 }
 
@@ -168,7 +240,22 @@ bool Ultimate_Tic_Tac_Toe_Board<T>::is_win() {
 }
 template<typename T>
 bool Ultimate_Tic_Tac_Toe_Board<T>::is_draw() {
-    return (this->n_moves == 81 && !is_win());
+    // Check if all subboards are closed
+    bool allBlocksClosed = true;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            if (blockStatus[i][j] == OPEN) {
+                allBlocksClosed = false;
+                break;
+            }
+        }
+        if (!allBlocksClosed) {
+            break;
+        }
+    }
+
+    // If all blocks are closed and no winner, it's a draw
+    return (allBlocksClosed && !is_win());
 }
 
 template<typename T>
@@ -185,7 +272,7 @@ public:
 };
 template<typename T>
 void Ultimate_Tic_Tac_Toe_player<T>::getmove(int &x, int &y) {
-    cout<<this->name<<"'s turn";
+    cout<<this->name<<"'s turn with symbol "<<this->symbol<<endl;
     cout<<"Please enter row and column between (0,8) : ";
     cin>>x >> y;
     while (cin.fail()) {
@@ -207,15 +294,42 @@ class Random_Ultimate_Tic_Tac_Toe : public RandomPlayer<T> {
 };
 template<typename T>
 void Random_Ultimate_Tic_Tac_Toe<T>::getmove(int &x, int &y) {
-    cout<<this->name<<"'s turn"<<endl;
-    int last_x = -1;
-    int last_y = -1;
-    do {
-        x = rand() % 9;
-        y = rand() % 9;
-    } while (x == last_x && y == last_y);
-    last_x = x;
-    last_y = y;
+    cout<<this->name<<"'s turn with symbol "<<this->symbol<<endl;
+
+    // Initialize map of available points if it's empty
+    if (availablePoints.empty()) {
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                availablePoints[{i, j}] = true; // All points initially available
+            }
+        }
+    }
+
+    // Copy available points to a vector
+    vector<pair<int, int>> keys;
+    for (const auto &entry : availablePoints) {
+        if (entry.second) { // Only include available points
+            keys.push_back(entry.first);
+        }
+    }
+
+    // Check if there are no more available points
+    if (keys.empty()) {
+        cout << "No more moves available! Game Over." << endl;
+        x = -1;
+        y = -1;
+        exit(0); // Terminate program gracefully
+    }
+
+    // Randomly select an index from the vector
+    int randomIndex = rand() % keys.size();
+    x = keys[randomIndex].first; // Extract x-coordinate
+    y = keys[randomIndex].second; // Extract y-coordinate
+
+    cout << "It chooses " << x << " " << y << endl;
+
+    // Remove chosen point from the available points map
+    availablePoints.erase({x, y});
 }
 
 int Ultimate_Tic_Tac_Toe_menu() {
@@ -282,6 +396,7 @@ int Ultimate_Tic_Tac_Toe_menu() {
     for (int i = 0; i < 2; ++i) {
         delete players[i];
     }
+    availablePoints.clear();
     return 0;
 }
 
