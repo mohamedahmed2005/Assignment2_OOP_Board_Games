@@ -133,7 +133,7 @@ bool Four_in_a_row_Board<T>::game_is_over() {
 //-----------------------------------------------------
 template<typename T>
 void Four_in_a_row_player<T>::getmove(int &x, int &y) {
-    cout<<this->name<<"'s turn";
+    cout<<this->name<<"'s turn with symbol "<<this->symbol<<endl;
     cout<<"Please enter column between (0,6) : ";
     cin>>x;
     while (cin.fail()) {
@@ -149,7 +149,7 @@ template<typename T>
 void Random_Four_in_a_row<T>::getmove(int &x, int &y) {
     int last_x = -1;
     int last_y = -1;
-    cout << this->name << "'s turn" << endl;
+    cout<<this->name<<"'s turn with symbol "<<this->symbol<<endl;
     do {
         x = rand() % 6;
         y = 0;
