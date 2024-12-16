@@ -187,27 +187,33 @@ bool SUS_X_O_Board<T> :: is_win() {
         cout << "Player 1 score: " << this->Player1_Score << "\nPlayer 2 score: " << this->Player2_Score << "\n";
     }
     if (this->n_moves == 9 && this->Player1_Score > this->Player2_Score) {
+        Vs_computer = false;
+        moves_counter = 0;
+        human_turn_vs_computer = 0;
         return true;
     }
     if (this->n_moves == 10 && this->Player1_Score < this->Player2_Score) {
+        Vs_computer = false;
+        moves_counter = 0;
+        human_turn_vs_computer = 0;
         return true;
     }
     return false;
 }
 
 template <typename T>
-bool SUS_X_O_Board<T> ::is_draw() {
-    return(this->n_moves == 10 && !is_win());
-}
-template <typename T>
-bool SUS_X_O_Board<T> ::game_is_over() {
-    if (this->n_moves == 10) {
+bool SUS_X_O_Board<T> :: is_draw() {
+    if (this->n_moves == 10 && !is_win()) {
         Vs_computer = false;
         moves_counter = 0;
         human_turn_vs_computer = 0;
         return true;
-   }
+    }
     return false;
+}
+template <typename T>
+bool SUS_X_O_Board<T> ::game_is_over() {
+    return (this->n_moves == 10);
 }
 
 //--------------------------------------
