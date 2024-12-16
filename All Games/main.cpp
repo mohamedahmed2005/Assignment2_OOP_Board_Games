@@ -7,6 +7,7 @@
 #include "Word-Tic-tac-toe.h"
 #include "X_O_4x4.h"
 #include "X_O_5x5.h"
+#include "SUS_X_O.h"
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -25,18 +26,20 @@ void menu() {
 		cout << "\nWhat Do you want to Play?\n\n";
 		cout << "[1] Pyramic Tic-Tac-Toe\n[2] Four-in-a-row\n[3] 5 x 5 Tic Tac Toe\n";
 		cout << "[4] Word Tic Tac Toe\n[5] Numerical Tic Tac Toe\n[6] Misere Tic Tac Toe\n";
-		cout << "[7] 4 x 4 Tic Tac Toe\n[8] Ultimate Tic Tac Toe\n[9] Exit the Program\n\n";
+		cout << "[7] 4 x 4 Tic Tac Toe\n[8] Ultimate Tic Tac Toe\n[9] SUS Game\n";
+		cout << "[10] Exit the Program\n\n";
 		cout << "Please enter you choice:";
 		int choice;
 		cin >> choice;
-		while (cin.fail() || (choice < 1 || choice > 9)) {
+		while (cin.fail() || (choice < 1 || choice > 10)) {
 			cin.clear(); // Clear the error flag
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Invalid input. Please choose between 1-9.\n\n";
+			cout << "Invalid input. Please choose between 1-10.\n\n";
 			cout << "What Do you want to Play?\n\n";
 			cout << "[1] Pyramic Tic-Tac-Toe\n[2] Four-in-a-row\n[3] 5 x 5 Tic Tac Toe\n";
 			cout << "[4] Word Tic Tac Toe\n[5] Numerical Tic Tac Toe\n[6] Misere Tic Tac Toe\n";
-			cout << "[7] 4 x 4 Tic Tac Toe\n[8] Ultimate Tic Tac Toe\n[9] Exit the Program\n\n";
+			cout << "[7] 4 x 4 Tic Tac Toe\n[8] Ultimate Tic Tac Toe\n[9] SUS Game\n";
+			cout << "[10] Exit the Program\n\n";
 			cout << "Please enter you choice:";
 			cin >> choice;
 		}
@@ -65,6 +68,8 @@ void menu() {
 			Ultimate_Tic_Tac_Toe_menu();
 		}
 		else if (choice == 9) {
+			SUS_Gameplay();
+		}else if (choice == 10) {
 			cout << "Thanks for using our Program :)\n";
 			break;
 		}
@@ -79,6 +84,7 @@ void menu() {
 
 int main() {
 	menu();
+	
 	return 0;
 
 }
