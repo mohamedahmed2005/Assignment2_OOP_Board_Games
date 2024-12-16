@@ -43,12 +43,16 @@ More complex than the traditional 3x3 version
 Meta-level Tic-Tac-Toe game
 Played across multiple interconnected boards
 
+### 9. SUS Tic Tac Toe
+Tic-Tac-Toe played on a 3x3 grid
+The goal is to form the sequence S-U-S by placing letters (S and U) in the grid
+
 ## How to Play
 
 Run the program
-Choose a game from the menu (1-8)
+Choose a game from the menu (1-9)
 Follow the in-game instructions
-Select option 9 to exit the program
+Select option 10 to exit the program
 
 ## Requirements
 
