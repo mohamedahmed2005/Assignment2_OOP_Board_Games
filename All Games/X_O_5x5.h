@@ -42,6 +42,7 @@ public:
 #include <string>
 
 int valid_moves = 0;
+char player1_symbol;
 
 //   X_O_5x5_Board IMPLEMENTATION
 
@@ -120,7 +121,7 @@ bool X_O_5x5_Board<T>::is_win() {
                 if (this->board[i][j] == this->board[i][j + 1] &&
                     this->board[i][j] == this->board[i][j + 2] &&
                     this->board[i][j] != ' ') {
-                    this->board[i][j] == 'X' ? ++player1_score : ++player2_score;
+                    this->board[i][j] == player1_symbol ? ++player1_score : ++player2_score;
                 }
             }
         }
@@ -131,7 +132,7 @@ bool X_O_5x5_Board<T>::is_win() {
                 if (this->board[i][j] == this->board[i + 1][j] &&
                     this->board[i][j] == this->board[i + 2][j] &&
                     this->board[i][j] != ' ') {
-                    this->board[i][j] == 'X' ? ++player1_score : ++player2_score;
+                    this->board[i][j] == player1_symbol ? ++player1_score : ++player2_score;
                 }
             }
         }
@@ -142,7 +143,7 @@ bool X_O_5x5_Board<T>::is_win() {
                 if (this->board[i][j] == this->board[i + 1][j + 1] &&
                     this->board[i][j] == this->board[i + 2][j + 2] &&
                     this->board[i][j] != ' ') {
-                    this->board[i][j] == 'X' ? ++player1_score : ++player2_score;
+                    this->board[i][j] == player1_symbol ? ++player1_score : ++player2_score;
                 }
             }
         }
@@ -153,7 +154,7 @@ bool X_O_5x5_Board<T>::is_win() {
                 if (this->board[i][j] == this->board[i + 1][j - 1] &&
                     this->board[i][j] == this->board[i + 2][j - 2] &&
                     this->board[i][j] != ' ') {
-                    this->board[i][j] == 'X' ? ++player1_score : ++player2_score;
+                    this->board[i][j] == player1_symbol ? ++player1_score : ++player2_score;
                 }
             }
         }
@@ -300,7 +301,7 @@ void X_O_5x5_Gameplay() {
         p1 = 'O';
         p2 = 'X';
     }
-
+    player1_symbol = p1;
     if (choice == 1) {
         players[0] = new X_O_5x5_Player<char>(playerXName, p1);
     }
